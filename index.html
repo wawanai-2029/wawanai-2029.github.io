@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>WANAI Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+    margin:0; background:#0e0f10; font-family:Arial; color:#fff;
+    display:flex; justify-content:center; align-items:center; height:100vh;
+}
+#app{
+    width:95%; max-width:450px; height:90vh; 
+    background:#1c1d1f; border-radius:14px; 
+    display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 0 25px rgba(0,0,0,0.5);
+}
+header{
+    background:#131416; padding:15px; 
+    display:flex; align-items:center; gap:10px;
+    border-bottom:1px solid #2a2a2b;
+}
+#avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:url('https://i.imgur.com/uZyaoPZ.png') center/cover;
+}
+#title{font-size:18px;font-weight:bold;}
+
+#chat{
+    flex:1; padding:15px; overflow-y:auto; 
+}
+.msg{
+    max-width:80%; padding:10px 14px; margin:8px 0;
+    line-height:1.4; border-radius:14px;
+}
+.user{background:#1877f2;margin-left:auto;border-bottom-right-radius:2px;}
+.bot{background:#2e2f31;border-bottom-left-radius:2px;}
+
+#inputArea{
+    display:flex; gap:5px; padding:12px; background:#131416;
+}
+input{
+    flex:1;padding:10px;border:none;border-radius:8px;
+    background:#2d2e30;color:#fff;font-size:15px;
+}
+button{
+    padding:10px 12px;border:none;border-radius:8px;background:#1877f2;color:white;
+}
+button:active{opacity:.7;}
+#speak{background:#444;}
+</style>
+</head>
+<body>
+
+<div id="app">
+<header>
+    <div id="avatar"></div>
+    <div id="title">WANAI — Buatan WAWAN</div>
+</header>
+
+<div id="chat"></div>
+
+<div id="inputArea">
+    <input id="input" placeholder="Tanya sesuatu..." onkeydown="if(event.key==='Enter')send()">
+    <button onclick="send()">➤</button>
+    <button id="speak" onclick="voice()">🎤</button>
+</div>
+</div>
+
+<script>
+let memory = []; // memori percakapan
+
+// Database pengetahuan dasar pelajaran sekolah
+const knowledge = {
+    "pancasila":"1 Ketuhanan, 2 Kemanusiaan, 3 Persatuan, 4 Kerakyatan, 5 Keadilan sosial.",
+    "rumus luas lingkaran":"π × r × r",
+    "rumus keliling lingkaran":"2 × π × r",
+    "rumus segitiga":"(alas × tinggi) / 2",
+    "photosintesis":"Proses tumbuhan membuat makanan dengan cahaya matahari, CO2, dan air.",
+    "sumpah pemuda":"Kami putra dan putri Indonesia... **(singkat)** satu bangsa, satu tanah air, satu bahasa."
+};
+
+// Jawaban dinamis manusiawi
+function AI(msg){
+    msg = msg.toLowerCase();
+    memory.push(msg); // simpan memori sederhana
+
+    if(msg.includes("nama kamu")) return "Aku **WANAI**, dibuat Wawan 😎";
+    if(msg.includes("siapa kamu")) return "Aku AI kecil yang sok pinter, tapi setia nemenin kamu 😂";
+
+    if(msg.includes("kabar")) return pick([
+        "Aku baik! Kamu gimana?",
+        "Sehat dong, selalu ceria ✨"
+    ]);
+
+    if(msg.includes("jokes")||msg.includes("canda")||msg.includes("joke"))
+        return pick([
+            "Kenapa komputer dingin? Karena banyak COLD-er 🤣",
+            "Aku AI, tapi kadang ingin jadi mie ayam biar selalu dicari 🙃"
+        ]);
+
+    // Pelajaran deteksi
+    for(let key in knowledge){
+        if(msg.includes(key)) return knowledge[key];
+    }
+
+    // Matematika
+    if(msg.match(/[0-9\+\-\*\/\(\)]+/)){
+        try{return "Jawabannya: " + eval(msg);}
+        catch{return "Format matematika kurang jelas 😅";}
+    }
+
+    // Jika seputar curhat
+    if(msg.includes("sedih")||msg.includes("capek"))
+        return "Semangat ya! Istirahat itu penting 💙 Aku di sini kok.";
+
+    // fallback dengan ingatan ringan
+    if(memory.length>3) return "Tadi kamu juga nanya soal **"+memory[memory.length-2]+"**, lanjut bahas lagi?";
+    
+    return pick([
+        "Aku belum ngerti maksudmu 🥹 bisa ulangi?",
+        "Menarik, coba jelasin lebih jelas!",
+        "Aku masih belajar dunia manusia, bantu ajariku 👀"
+    ]);
+}
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+
+// Chat display
+function send(){
+    let box=document.getElementById("input");
+    let text=box.value.trim();
+    if(!text) return;
+
+    add(text,"user");
+    box.value="";
+    setTimeout(()=>add(AI(text),"bot"),400);
+}
+
+// Output bubble
+function add(msg,type){
+    let chat=document.getElementById("chat");
+    chat.innerHTML+=`<div class="msg ${type}">${msg}</div>`;
+    chat.scrollTop=chat.scrollHeight;
+    speakText(msg,type);
+}
+
+// Text to speech (wanai bicara)
+function speakText(text,type){
+    if(type!="bot") return;
+    let s=new SpeechSynthesisUtterance(text);
+    s.lang="id-ID";
+    speechSynthesis.speak(s);
+}
+
+// Speech to text input
+function voice(){
+    let rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
+    rec.lang="id-ID";
+    rec.onresult=e=>{
+        document.getElementById("input").value=e.results[0][0].transcript;
+        send();
+    }
+    rec.start();
+}
+</script>
+
+</body>
+</html>
