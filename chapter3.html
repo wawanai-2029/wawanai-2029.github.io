@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 3</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script>
+if(!localStorage.getItem("loggedUser")){
+    window.location="login.html";
+}
+let currentUser = localStorage.getItem("loggedUser");
+</script>
+
+<header>📖 Chapter 3 - Dunia di Balik Cahaya</header>
+<div class="container">
+
+<p>
+Saat melewati gerbang, WN melihat dunia lain. Langit ungu, pepohonan bercahaya lembut.
+Makhluk kecil mendekat membawa kristal biru berdenyut hangat.
+Suara misterius bergema, "Pemilik kristal akan menentukan masa depan dunia ini."
+WN sadar pencariannya baru dimulai...
+</p>
+
+<div class="chapter-nav">
+    <a class="button" href="chapter2.html">« Prev</a>
+    <a class="button" href="index.html">Kembali</a>
+</div>
+
+<p><b>Login sebagai:</b> <script>document.write(currentUser)</script></p>
+<button class="button" onclick="logout()">Logout</button>
+
+<script>
+function logout(){ localStorage.removeItem("loggedUser"); window.location="login.html"; }
+</script>
+
+<!-- KOMENTAR -->
+<div class="comment-box">
+    <h3>Komentar (Chapter 3)</h3>
+    <textarea id="comment"></textarea>
+    <button class="button" onclick="addComment()">Kirim</button>
+    <div id="commentList"></div>
+</div>
+
+</div>
+
+<footer>© 2024 WN</footer>
+
+<script>
+let k="comments_ch3";
+let comments = JSON.parse(localStorage.getItem(k)||"[]");
+show();
+
+function addComment(){
+    let v=comment.value.trim();
+    if(!v) return alert("Komentar kosong!");
+    comments.push(currentUser+": "+v);
+    localStorage.setItem(k,JSON.stringify(comments));
+    comment.value=""; show();
+}
+function show(){
+    commentList.innerHTML="";
+    comments.forEach(t=>{
+        let d=document.createElement("div");
+        d.className="comment";
+        d.textContent=t;
+        commentList.appendChild(d);
+    });
+}
+</script>
+</body>
+</html>

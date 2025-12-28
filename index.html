@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Novel Online WN</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script>
+if(!localStorage.getItem("loggedUser")){
+    alert("Silahkan login dulu untuk masuk ke website!");
+    window.location.href="login.html";
+}
+</script>
+let currentUser = localStorage.getItem("loggedUser");
+</script>
+
+<header>📚 Koleksi Cerita - WN</header>
+
+<div class="container">
+    <h2>Selamat datang <b><script>document.write(currentUser)</script></b>!</h2>
+
+    <p>Pilih cerita untuk mulai membaca:</p>
+
+    <ul>
+        <li><a href="chapter1.html">🔹 Petualangan WN Menuju Harta Misterius</a></li>
+    </ul>
+
+    <br>
+    <button class="button" onclick="logout()">Logout</button>
+
+    <script>
+    function logout(){
+        localStorage.removeItem("loggedUser");
+        window.location="login.html";
+    }
+    </script>
+</div>
+
+<footer>© 2024 Website Cerita oleh WN</footer>
+</body>
+</html>

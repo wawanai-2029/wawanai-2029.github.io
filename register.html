@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Daftar Akun - WN</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.form-box{max-width:400px;margin:auto;background:white;padding:20px;border-radius:10px;margin-top:60px;box-shadow:0 0 10px rgba(0,0,0,0.1);}
+input{width:100%;padding:10px;margin-top:10px;border-radius:5px;border:1px solid #ccc;}
+button{width:100%;padding:10px;margin-top:20px;background:#3554F0;color:white;border:none;border-radius:5px;}
+</style>
+</head>
+<body>
+
+<header>🔐 Daftar Akun Baru</header>
+
+<div class="form-box">
+    <input type="text" id="user" placeholder="Buat Username">
+    <input type="password" id="pass" placeholder="Buat Password">
+    <button onclick="register()">Daftar</button>
+    <p style="margin-top:15px">Sudah punya akun? <a href="login.html">Login</a></p>
+</div>
+
+<script>
+function register(){
+    let u = user.value.trim();
+    let p = pass.value.trim();
+
+    if(!u || !p) return alert("Username dan password wajib diisi!");
+    
+    if(localStorage.getItem("users")){
+        let users = JSON.parse(localStorage.getItem("users"));
+        if(users[u]) return alert("Username sudah ada! Coba nama lain.");
+        users[u]=p;
+        localStorage.setItem("users", JSON.stringify(users));
+    }else{
+        let users={}; users[u]=p;
+        localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    alert("Akun berhasil dibuat! Silakan login.");
+    window.location="login.html";
+}
+</script>
+
+</body>
+</html>

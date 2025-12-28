@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script>
+if(!localStorage.getItem("loggedUser")){
+    window.location="login.html";
+}
+let currentUser = localStorage.getItem("loggedUser");
+</script>
+
+<header>📖 Chapter 2 - Penjaga Gerbang</header>
+<div class="container">
+
+<p>
+Perjalanan menuju lokasi di peta jauh lebih sulit dari yang dibayangkan.
+WN melewati lembah berkabut, sungai deras, hingga tiba di sebuah batu besar bercahaya.
+Dari balik kabut muncul sosok berjubah hitam dengan mata tajam namun damai.
+"Aku penjaga Gerbang Cahaya," katanya. "Tak semua orang boleh masuk. Apa tujuanmu?"
+Dengan suara tegas WN menjawab, "Aku ingin mengetahui rahasia yang dunia sembunyikan."
+Penjaga itu tersenyum pelan lalu memberi tanda untuk mendekat...
+</p>
+
+<div class="chapter-nav">
+    <a class="button" href="chapter1.html">« Prev</a>
+    <a class="button" href="chapter3.html">Next »</a>
+</div>
+
+<p><b>Login sebagai:</b> <script>document.write(currentUser)</script></p>
+<button class="button" onclick="logout()">Logout</button>
+
+<script>
+function logout(){ localStorage.removeItem("loggedUser"); window.location="login.html"; }
+</script>
+
+<!-- KOMENTAR -->
+<div class="comment-box">
+    <h3>Komentar (Chapter 2)</h3>
+    <textarea id="comment"></textarea>
+    <button class="button" onclick="addComment()">Kirim</button>
+    <div id="commentList"></div>
+</div>
+
+</div>
+
+<footer>© 2024 WN</footer>
+
+<script>
+let k="comments_ch2";
+let comments = JSON.parse(localStorage.getItem(k)||"[]");
+show();
+
+function addComment(){
+    let v=comment.value.trim();
+    if(!v) return alert("Komentar kosong!");
+    comments.push(currentUser+": "+v);
+    localStorage.setItem(k,JSON.stringify(comments));
+    comment.value=""; show();
+}
+function show(){
+    commentList.innerHTML="";
+    comments.forEach(t=>{
+        let d=document.createElement("div");
+        d.className="comment";
+        d.textContent=t;
+        commentList.appendChild(d);
+    });
+}
+</script>
+</body>
+</html>
